@@ -5,3 +5,5 @@ Scrapy project (python) to scrape Finnish namedays from www.nimipaivat.fi
 
 `scrapy crawl nameday`
 
+Output will be written to `items.json`
+
