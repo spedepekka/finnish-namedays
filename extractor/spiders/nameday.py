@@ -15,17 +15,18 @@ from extractor.items import NamedayItem
 date_pattern = re.compile('\d+')
 
 nameday_url = "http://www.nimipaivat.fi/"
-# Resolve day and month
-now = datetime.datetime.now()
-day = now.day
-month = now.month
-# Create URL for today
-today_url = "{}{}.{}.".format(nameday_url, day, month)
+# Create URLs for each day
+urls = []
+mlen = (31,28,31,30,31,30,31,31,30,31,30,31)
+for currentmonth in range (len(mlen)):
+    for day in range (mlen[currentmonth]):
+        url = "{}{}.{}.".format(nameday_url, day+1, currentmonth+1)
+        urls.append(url)
 
 class NamedaySpider(scrapy.Spider):
     name = "nameday"
     allowed_domains = ["nimipaivat.fi"]
-    start_urls = [today_url]
+    start_urls = urls
 
     def parse(self, response):
         # Extract
