@@ -31,9 +31,6 @@ class NamedaySpider(scrapy.Spider):
     def parse(self, response):
         # Extract
         date = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/h1/text()").extract_first()
-        official_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[1]/strong/a/text()").extract()
-        swedish_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[2]/strong/a/text()").extract()
-        sami_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[3]/strong/a/text()").extract()
         orthodox_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[4]/strong/a/text()").extract()
         unofficial_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[5]/strong/a/text()").extract()
 
@@ -44,9 +41,6 @@ class NamedaySpider(scrapy.Spider):
         item = NamedayItem()
         item['day'] = extracted_date[0]
         item['month'] = extracted_date[1]
-        item['official_names'] = official_names
-        item['swedish_names'] = swedish_names
-        item['sami_names'] = sami_names
         item['orthodox_names'] = orthodox_names
         item['unofficial_names'] = unofficial_names
 
