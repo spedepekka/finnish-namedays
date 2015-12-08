@@ -7,9 +7,12 @@
 # License: MIT
 #
 
+import re
 import datetime
 import scrapy
 from extractor.items import NamedayItem
+
+date_pattern = re.compile('\d+')
 
 nameday_url = "http://www.nimipaivat.fi/"
 # Resolve day and month
@@ -25,26 +28,27 @@ class NamedaySpider(scrapy.Spider):
     start_urls = [today_url]
 
     def parse(self, response):
-        items = []
-
-        # Extract names
+        # Extract
+        date = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/h1/text()").extract_first()
         official_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[1]/strong/a/text()").extract()
         swedish_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[2]/strong/a/text()").extract()
         sami_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[3]/strong/a/text()").extract()
         orthodox_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[4]/strong/a/text()").extract()
         unofficial_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[5]/strong/a/text()").extract()
 
-        # Create new item
-        item = NamedayItem()
+        # Extract day and month from date string
+        extracted_date = date_pattern.findall(date)
+
         # Populate the item
+        item = NamedayItem()
+        item['day'] = extracted_date[0]
+        item['month'] = extracted_date[1]
         item['official_names'] = official_names
         item['swedish_names'] = swedish_names
         item['sami_names'] = sami_names
         item['orthodox_names'] = orthodox_names
         item['unofficial_names'] = unofficial_names
-        # Save item
-        items.append(item)
 
-        # Return items to pipeline
-        return items
+        # Return item to pipeline
+        return item
 
