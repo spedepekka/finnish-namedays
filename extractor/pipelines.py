@@ -2,7 +2,7 @@
 
 import json
 
-class ExtractorPipeline(object):
+class JsonPipeline(object):
 
     def __init__(self):
         self.file = open('items.json', 'wb')

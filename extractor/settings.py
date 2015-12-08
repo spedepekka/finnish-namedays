@@ -62,7 +62,7 @@ NEWSPIDER_MODULE = 'extractor.spiders'
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'extractor.pipelines.ExtractorPipeline': 300,
+    'extractor.pipelines.JsonPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
