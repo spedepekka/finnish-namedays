@@ -29,10 +29,26 @@ class NamedaySpider(scrapy.Spider):
     start_urls = urls
 
     def parse(self, response):
-        # Extract
-        date = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/h1/text()").extract_first()
-        orthodox_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[4]/strong/a/text()").extract()
-        unofficial_names = response.xpath("/html/body/div[@class='kontaineri']/div[@class='eka']/p[5]/strong/a/text()").extract()
+
+        official_names = []
+        swedish_names = []
+        same_names = []
+        orthodox_names = []
+        unofficial_names = []
+
+        date = response.xpath("/html/body/div/div/div/h1/text()").extract_first()
+        ps = response.xpath("/html/body/div[@class='container']/div[@class='row']/div[@class='col-md-6']/p")
+        for p in ps:
+            if "Nimi" in p.extract():
+                official_names = p.xpath("strong/a/text()").extract()
+            elif "Ruotsinkieli" in p.extract():
+                swedish_names = p.xpath("strong/a/text()").extract()
+            elif "Saamenkieli" in p.extract():
+                same_names = p.xpath("strong/a/text()").extract()
+            elif "Ortodoksista" in p.extract():
+                orthodox_names = p.xpath("strong/a/text()").extract()
+            elif "virallista" in p.extract():
+                unofficial_names = p.xpath("strong/a/text()").extract()
 
         # Extract day and month from date string
         extracted_date = date_pattern.findall(date)
@@ -41,6 +57,10 @@ class NamedaySpider(scrapy.Spider):
         item = NamedayItem()
         item['day'] = extracted_date[0]
         item['month'] = extracted_date[1]
+        # Uncomment these lines to make this crawler crawl forbidden names
+        # item['official_names'] = official_names
+        # item['swedish_names'] = swedish_names
+        # item['same_names'] = same_names
         item['orthodox_names'] = orthodox_names
         item['unofficial_names'] = unofficial_names
 

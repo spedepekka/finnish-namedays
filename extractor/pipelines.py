@@ -4,11 +4,13 @@ import json
 
 class JsonPipeline(object):
 
-    def __init__(self):
-        self.file = open('items.json', 'wb')
+    my_items = []
+
+    def close_spider(self, spider):
+        with open('items.json', 'wb') as f:
+            f.write(json.dumps(self.my_items))
+            f.write("\n")
 
     def process_item(self, item, spider):
-        line = "{}\n".format(json.dumps(dict(item)))
-        self.file.write(line)
+        self.my_items.append(dict(item))
         return item
-

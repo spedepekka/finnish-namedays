@@ -62,4 +62,5 @@ target/
 
 # Scrapy output file
 items.json
+items-formatted.json
 
